@@ -1,8 +1,19 @@
 const express = require('express')
 const sequelize = require('sequelize')
 const mysql = require('mysql2')
+const cookieParser = require('cookie-parser')
 
 const app = express()
+
+// Express Configuration
+
+app.use(express.json())
+app.use(cookieParser())
+
+
+// Routes
+
+app.use('/auth', require('./controllers/auth'))
 
 app.get('/', async (req, res) => {
     res.send("Hello World")
