@@ -1,0 +1,12 @@
+version: '3.1'
+
+services: 
+  mysql:
+    image: mysql:latest
+    environment: 
+      MYSQL_ROOT_PASSWORD: Zaimzaim1@
+      MYSQL_USER: zaimazhar97
+      MYSQL_PASSWORD: Zaimzaim1@
+      MYSQL_DATABASE: pikp
+    ports: 
+      - "3306:3306"

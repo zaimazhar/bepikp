@@ -2,11 +2,15 @@ const express = require('express')
 const sequelize = require('sequelize')
 const mysql = require('mysql2')
 const cookieParser = require('cookie-parser')
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json');
+
 
 const app = express()
 
 // Express Configuration
 
+app.use('/api', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use(express.json())
 app.use(cookieParser())
 
