@@ -1,17 +1,20 @@
 const jsonwebtoken = require('jsonwebtoken')
-const JwtStrategy = require('passport-jwt').Strategy
-const ExtractJwt = require('passport-jwt').ExtractJwt
 
-let opts = {}
 
-opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken()
-opts.secretOrKey = 'pikpbackend'
+passport.authenticate('jwt', {
+  
+})
 
 function generateJwt(payload) {
-  const jwt = jsonwebtoken.sign(payload, process.env.PIKP_SECRET)
-  
-  return jwt
+  return jsonwebtoken.sign(payload, process.env.PIKP_SECRET)
+  jsonwebtoken.verify()
 }
+
+// function middleware(token) {
+//   retujsonwebtoken.verify(token, process.env.PIKP_SECRET)) {
+//     return true
+//   }
+// }
 
 module.exports = {
   generateJwt,
