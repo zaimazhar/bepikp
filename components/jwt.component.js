@@ -1,10 +1,5 @@
 const jsonwebtoken = require('jsonwebtoken')
 
-
-passport.authenticate('jwt', {
-  
-})
-
 function generateJwt(payload) {
   return jsonwebtoken.sign(payload, process.env.PIKP_SECRET)
 }
