@@ -9,18 +9,32 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(models) {
+    static associate({ User }) {
       // define association here
+      this.belongsTo(User, { foreignKey: 'userId', as: 'user' })
     }
-  };
+
+    toJSON() {
+      return { ...this.get(), id: undefined, updatedAt: undefined, createdAt: undefined }
+    }
+  }
   Credentials.init({
     id: {
-      type: DataTypes.STRING,
+      primaryKey: true,
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
       allowNull: false,
     },
+    token: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true
+    }
   }, {
     sequelize,
     modelName: 'Credentials',
+    tableName: 'credentials'
   });
+
   return Credentials;
 };
