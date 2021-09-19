@@ -1,10 +1,8 @@
-const sequelize = require('sequelize')
+const { sequelize } = require('./models')
 
 async function migrate() {
-  sequelize.sync({
-    force: true,
-
-  })
+  await sequelize.authenticate()
+  await sequelize.sync({ alter: true })
 }
 
 migrate()

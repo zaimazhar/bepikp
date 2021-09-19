@@ -1,8 +1,8 @@
+/* jshint node: true */
 'use strict';
 const {
   Model
 } = require('sequelize');
-const { Sequelize } = require('.');
 const uuid = require('uuid');
 const credentials = require('./credentials');
 module.exports = (sequelize, DataTypes) => {
@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
     id: {
       primaryKey: true,
       type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
+      defaultValue: DataTypes.UUIDV1,
       allowNull: false,
     },
     username: {
