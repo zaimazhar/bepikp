@@ -1,27 +1,24 @@
-/* jshint node: true */
 'use strict';
 const {
   Model
 } = require('sequelize');
-const uuid = require('uuid');
-const credentials = require('./credentials');
 module.exports = (sequelize, DataTypes) => {
-  class User extends Model {
+  class CourseParticipants extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate({ Credentials }) {
-      // define association here
-      this.hasOne(Credentials, { foreignKey: 'userId', as: 'userCredentialRelation' })
+    static associate({ Courses, ParticipantCompany }) {
+      this.belongsTo(Courses, { foreignKey: 'courseId', as: 'userCourseRelation' })
+      this.hasOne(ParticipantCompany, { foreignKey: 'courseParticipantsId', as: 'courseParticipantsCompanyRelation' })
     }
 
     toJSON() {
       return { ...this.get(), id: undefined, updatedAt: undefined, createdAt: undefined }
     }
-  }
-  User.init({
+  };
+  CourseParticipants.init({
     id: {
       primaryKey: true,
       type: DataTypes.UUID,
@@ -31,25 +28,32 @@ module.exports = (sequelize, DataTypes) => {
         isUUID: 4
       }
     },
-    username: {
+    participantFullname: {
       type: DataTypes.STRING,
       allowNull: false
     },
-    email: {
-      type: DataTypes.STRING,
-      isEmail: true,
-      notEmpty: true,
-      allowNull: false
+    participantAddress: {
+      type: DataTypes.JSON,
     },
-    password: {
+    participantId: {
       type: DataTypes.STRING,
       allowNull: false,
-      notEmpty: true,
-      min: 4
+      validate: {
+        len: 12,
+      }
+    },
+    participantPhone: {
+      type: DataTypes.STRING
+    },
+    participantEmail: {
+      type: DataTypes.STRING,
+      validate: {
+        isEmail: true
+      }
     }
   }, {
     sequelize,
-    modelName: 'User',
+    modelName: 'CourseParticipants',
   });
-  return User;
+  return CourseParticipants;
 };

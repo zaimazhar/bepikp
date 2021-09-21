@@ -1,27 +1,23 @@
-/* jshint node: true */
 'use strict';
 const {
   Model
 } = require('sequelize');
-const uuid = require('uuid');
-const credentials = require('./credentials');
 module.exports = (sequelize, DataTypes) => {
-  class User extends Model {
+  class Courses extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate({ Credentials }) {
-      // define association here
-      this.hasOne(Credentials, { foreignKey: 'userId', as: 'userCredentialRelation' })
+    static associate({ CourseParticipants }) {
+      this.hasMany(CourseParticipants, { foreignKey: 'courseId', as: 'courseParticipantRelation' })
     }
 
     toJSON() {
       return { ...this.get(), id: undefined, updatedAt: undefined, createdAt: undefined }
     }
-  }
-  User.init({
+  };
+  Courses.init({
     id: {
       primaryKey: true,
       type: DataTypes.UUID,
@@ -31,25 +27,39 @@ module.exports = (sequelize, DataTypes) => {
         isUUID: 4
       }
     },
-    username: {
+    courseName: {
       type: DataTypes.STRING,
       allowNull: false
     },
-    email: {
+    courseStart: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      validate: {
+        isDate: true
+      }
+    },
+    courseEnd: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      validate: {
+        isDate: true
+      }
+    },
+    courseCost: {
       type: DataTypes.STRING,
-      isEmail: true,
-      notEmpty: true,
       allowNull: false
     },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      notEmpty: true,
-      min: 4
+    courseVenue: {
+      type: DataTypes.JSON,
+      allowNull: false
+    },
+    courseStatus: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true
     }
   }, {
     sequelize,
-    modelName: 'User',
+    modelName: 'Courses',
   });
-  return User;
+  return Courses;
 };
