@@ -23,6 +23,7 @@ app.use(sequelizeMiddleware);
 // Routes
 app.use("/", require("./controllers/public.controller"));
 app.use("/auth", require("./controllers/auth.controller"));
+app.use("/course", require("./controllers/course.controller"))
 
 // Start Server
 app.listen(3000, async () => {
