@@ -1,6 +1,7 @@
 const express = require('express')
 const { Courses, CourseParticipants, ParticipantCompany } = require('../models')
 const { authenticationService } = require('../services/authentication')
+const jsonfile = require('jsonfile')
 
 const router = express.Router()
 
@@ -24,6 +25,20 @@ router.post('/signup', async (req, res) => {
   else res.json({ ...req.body, token: token.message })
 })
 
+router.get('/city/:negeri', async (req, res) => {
+  const negeri = req.params.negeri
+  jsonfile.readFile('seeders/states-with-cities.json', function (err, obj) {
+    if(err) console.log(err)
+
+    const data = obj
+  
+    console.log(data[1])
+  })
+  // console.log(data)
+  // res.json(data)
+  res.json({ name: "Zaim" })
+})
+
 router.post('/logout', async (req, res) => {
   if(await authenticationService.logout(req.body.token))
     res.json({ message: "Deleted" })
@@ -32,50 +47,50 @@ router.post('/logout', async (req, res) => {
 })
 
 router.get('/send', async (req, res) => {
-  // await Courses.create({
-  //   courseName: "Training 1",
-  //   courseStart: (new Date()).toISOString(),
-  //   courseEnd: (new Date()).toISOString(),
-  //   courseCost: "2000",
-  //   courseVenue: {
-  //     addr1: "taman ria",
-  //     addr2: "taman mahsuri",
-  //     region: "padang serai",
-  //     state: "kedah"
-  //   }
+  await Courses.create({
+    courseName: "Training 2",
+    courseStart: (new Date()).toISOString(),
+    courseEnd: (new Date()).toISOString(),
+    courseCost: "3000",
+    courseVenue: {
+      addr1: "the light hotel",
+      addr2: "",
+      region: "",
+      state: "kedah"
+    }
+  })
+
+  // const course = (await Courses.findAll())[0]
+
+  // const participant = await CourseParticipants.create({
+  //   participantFullname: 'Muhammad Zaim',
+  //   participantId: '970709026337',
+  //   participantPhone: '01164134714',
+  //   participantEmail: 'zaim.azhar97@gmail.com',
+  //   participantAddress: JSON.stringify({
+  //     addr1: "no 90, jalan mbi 6/1",
+  //     addr2: "taman mbi desaku",
+  //     region: "kulim",
+  //     state: "kedah",
+  //     postcode: "09400"
+  //   }),
+  //   courseId: course.id
   // })
 
-  const course = (await Courses.findAll())[0]
-
-  const participant = await CourseParticipants.create({
-    participantFullname: 'Muhammad Zaim',
-    participantId: '970709026337',
-    participantPhone: '01164134714',
-    participantEmail: 'zaim.azhar97@gmail.com',
-    participantAddress: JSON.stringify({
-      addr1: "no 90, jalan mbi 6/1",
-      addr2: "taman mbi desaku",
-      region: "kulim",
-      state: "kedah",
-      postcode: "09400"
-    }),
-    courseId: course.id
-  })
-
-  await ParticipantCompany.create({
-    companyName: 'SHEPro Sdn Bhd',
-    companyPhone: '01164134714',
-    companyAttention: 'Yusry',
-    companyAddress: JSON.stringify({
-      addr1: "jalan ria",
-      addr2: "taman mahsuri",
-      region: "padang serai",
-      state: "kedah",
-      postcode: "09400"
-    }),
-    companyEmail: 'yusry@shepro.com',
-    courseParticipantsId: participant.id
-  })
+  // await ParticipantCompany.create({
+  //   companyName: 'SHEPro Sdn Bhd',
+  //   companyPhone: '01164134714',
+  //   companyAttention: 'Yusry',
+  //   companyAddress: JSON.stringify({
+  //     addr1: "jalan ria",
+  //     addr2: "taman mahsuri",
+  //     region: "padang serai",
+  //     state: "kedah",
+  //     postcode: "09400"
+  //   }),
+  //   companyEmail: 'yusry@shepro.com',
+  //   courseParticipantsId: participant.id
+  // })
 
   res.json(await Courses.findAll())
 
