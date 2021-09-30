@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate({ Courses, ParticipantCompany }) {
       this.belongsTo(Courses, { foreignKey: 'courseId', as: 'userCourseRelation' })
-      this.hasOne(ParticipantCompany, { foreignKey: 'courseParticipantsId', as: 'courseParticipantsCompanyRelation' })
+      this.hasOne(ParticipantCompany, { foreignKey: 'courseParticipantsId', as: 'participantCompany' })
     }
 
     toJSON() {

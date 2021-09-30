@@ -5,12 +5,6 @@ const jsonfile = require('jsonfile')
 
 const router = express.Router()
 
-router.get('/', async (req, res) => {
-  res.json({
-    "message": "Received your form"
-  })
-})
-
 router.post('/login', async (req, res) => {
   const token = await authenticationService.auth(req.body)
 
@@ -25,18 +19,14 @@ router.post('/signup', async (req, res) => {
   else res.json({ ...req.body, token: token.message })
 })
 
-router.get('/city/:negeri', async (req, res) => {
-  const negeri = req.params.negeri
-  jsonfile.readFile('seeders/states-with-cities.json', function (err, obj) {
+router.get('/city/:id', async (req, res) => {
+  const id = req.params.id
+  jsonfile.readFile('seeders/all.json', function (err, obj) {
     if(err) console.log(err)
 
     const data = obj
-  
-    console.log(data[1])
+    res.json(data.state[id].city)
   })
-  // console.log(data)
-  // res.json(data)
-  res.json({ name: "Zaim" })
 })
 
 router.post('/logout', async (req, res) => {
