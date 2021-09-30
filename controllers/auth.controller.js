@@ -20,16 +20,6 @@ router.use(async (req, res, next) => {
   else res.status(401).send("Unauthorized!")
 })
 
-router.get('/', async (req, res) => {
-  const user = await User.create({
-    username: 'zaimazhar',
-    email: 'zaim.azhar97@gmail.com',
-    password: 'Zaimzaim1@',
-  })
-  
-  res.send(user)
-})
-
 router.post('/signup', async (req, res) => {
   let { username, email, password } = req.body
   

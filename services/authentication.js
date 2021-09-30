@@ -22,7 +22,7 @@ async function auth(user) {
 	// Find the user by either their username or email
 	const userAuth = await User.findOne({
 		where: {
-			[Op.or]: [{ username: user.username }, { email: user.email }],
+			[Op.or]: [{ username: user.auth }, { email: user.auth }],
 		},
 	});
 
