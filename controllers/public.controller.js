@@ -2,6 +2,7 @@ const express = require('express')
 const { Courses, CourseParticipants, ParticipantCompany } = require('../models')
 const { authenticationService } = require('../services/authentication')
 const jsonfile = require('jsonfile')
+const { createMail } = require('../services/nodemailer')
 
 const router = express.Router()
 
@@ -27,6 +28,12 @@ router.get('/city/:id', async (req, res) => {
     const data = obj
     res.json(data.state[id].city)
   })
+})
+
+router.get('/mail', async (req, res) => {
+  createMail()
+
+  res.json({message: "Done"})
 })
 
 router.post('/logout', async (req, res) => {
