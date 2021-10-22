@@ -2,6 +2,7 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const { sequelize } = require("./models");
+const job = require("./services/jobs");
 require("dotenv").config();
 
 const app = express();
@@ -27,6 +28,7 @@ app.use("/course", require("./controllers/course.controller"))
 
 // Start Server
 app.listen(3000, async () => {
+	job.start()
 	console.log("Database Running!");
 	console.log("Backend running on port 3000");
 });

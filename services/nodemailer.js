@@ -1,4 +1,5 @@
 const nodemailer = require('nodemailer')
+const job = require('../services/jobs')
 const transport = nodemailer.createTransport({
   host: process.env.MAIL_HOST,
   port: process.env.MAIL_PORT,
@@ -14,18 +15,17 @@ async function createMail(nama) {
     subject: 'Testing Email',
     html: "<h1>Hello</h1><p>testing email here</p>"
   }
-
-  transport.sendMail(message, (err, info) => {
+  
+  job.add(transport.sendMail(message, (err, info) => {
     if(err) {
       console.log(`Error: ${err}`)
       return process.exit(1)
     }
     
-    console.log("Sent Email")
-    console.log(nodemailer.getTestMessageUrl(info))
-
+    console.log(`Sent Email: ${nama}`)
+    
     transport.close()
-  })
+  }))
 }
 
 module.exports = {
