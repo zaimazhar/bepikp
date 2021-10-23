@@ -3,19 +3,24 @@ const jwtComponent = require('../components/jwt.component')
 const { User, Credentials } = require('../models')
 const bcrypt = require('bcrypt')
 const { Op } = require('sequelize')
+const { authenticationService } = require('../services/authentication')
 
 const router = express.Router()
 
 router.use(async (req, res, next) => {
   if(req.headers.authorization) {
+    let token = req.headers.authorization.split(' ')[1]
     const check = await Credentials.findOne({
       where: {
-        token: req.headers.authorization
+        token
       }
     })
 
     if(!check) res.status(401).send("Unauthorized!")
-    else next()
+    else {
+      req.token = token
+      next()
+    }
   }
   else res.status(401).send("Unauthorized!")
 })
@@ -92,8 +97,8 @@ router.post('/login', async (req, res) => {
 })
 
 router.post('/logout', async (req, res) => {
-  res.clearCookie('pikp')
-  res.redirect('/')
+  if(await authenticationService.logout(req.token)) res.sendStatus(200)
+  else res.status(400).send("Logout process unsuccesful")
 })
 
 router.get('/dashboard', (req, res) => {

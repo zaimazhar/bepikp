@@ -39,8 +39,8 @@ async function auth(user) {
 	const payload = {
 		id: userAuth.id,
 		username: userAuth.username,
-		email: userAuth.email
-	}
+		email: userAuth.email,
+	};
 
 	// Generate JWT to be stored inside the user browser for guarded oepration / path
 	const token = jsonwebtoken.sign(payload, process.env.PIKP_SECRET, {
@@ -65,24 +65,19 @@ async function auth(user) {
 }
 
 async function logout(token) {
-	const user = jsonwebtoken.verify(token, process.env.PIKP_SECRET)
+	const user = jsonwebtoken.verify(token, process.env.PIKP_SECRET);
 	const destroyStatus = await Credentials.destroy({
 		where: {
-			[Op.and]: [
-				{ token: token },
-				{ userId: user.id }
-			]
-		}
-	})
+			[Op.and]: [{ token: token }, { userId: user.id }],
+		},
+	});
 
-	if(destroyStatus)
-		return true
-	else
-		return false
+	if (destroyStatus) return true
+	else return false;
 }
 
 module.exports.authenticationService = {
 	createUser,
 	auth,
-	logout
+	logout,
 };
