@@ -1,6 +1,7 @@
 const express = require("express");
 const {
 	Courses,
+	Benefits,
 	CourseParticipants,
 	ParticipantCompany,
 } = require("../models");
@@ -22,17 +23,38 @@ const mw = async (req, res, next) => {
 };
 
 router.get("/", async (req, res) => {
-	res.json(await Courses.findAll());
+	res.json(await Courses.findAll({
+		include: "courseBenefits"
+	}));
 });
 
 router.post("/create", async (req, res) => {
-	const data = req.body;
-	console.log(data);
-	const course = Courses.create(data);
+	try {
+		// Assign the whole body request to the data variable
+		const data = req.body;
 	
-	if (!course) res.status(400).json({ message: "Invalid Data Submission" });
+		// Assign the courseBenefits to benefits variable
+		const benefits = data.courseBenefits
 	
-	res.json(course);
+		// Delete courseBenefits from the assigned data variable
+		delete data.courseBenefits
+	
+		// Create new course
+		const course = await Courses.create(data);
+
+		console.log(course.id)
+
+		// Map each benefit with their courseId foreign key column
+		const bulkBenefits = benefits.map(benefits => ({ benefits, courseId: course.id  }))
+		
+		// Bulk Create (maybe should use transaction?)
+		await Benefits.bulkCreate(bulkBenefits)
+
+
+		res.json({ course, bulkBenefits });
+	} catch(err) {
+		res.status(400).send(err)
+	}
 });
 
 router.get("/:id", async (req, res) => {
@@ -69,15 +91,18 @@ router.post("/edit", async (req, res) => {
 
 router.post("/register", async (req, res) => {
 	const data = req.body;
+
+	console.log(data.payment)
 	
 	if(!data) res.sendStatus(400)
 
 	try {
 		const participant = await CourseParticipants.create({
 			participantFullname: data.fullname,
+			participantPaymentMethod: data.payment,
 			participantAddress: {
-				addr1: data.addr1,
-				addr2: data.addr2,
+				addr: data.addr,
+				// addr2: data.addr2,
 				postcode: data.postcode,
 				region: data.region,
 				state: data.state,
@@ -95,8 +120,8 @@ router.post("/register", async (req, res) => {
 				companyEmail: data.companyEmail,
 				companyAttention: data.companyAttention,
 				companyAddress: {
-					addr1: data.companyAddr1,
-					addr2: data.companyAddr2,
+					addr: data.companyAddr,
+					// addr2: data.companyAddr2,
 					postcode: data.companyPostcode,
 					region: data.companyRegion,
 					state: data.companyState,

@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     toJSON() {
-      return { ...this.get(), id: undefined, updatedAt: undefined, createdAt: undefined }
+      return { ...this.get(), id: undefined, courseId: undefined, updatedAt: undefined, createdAt: undefined }
     }
   };
   CourseParticipants.init({
@@ -50,6 +50,13 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         isEmail: true
       }
+    },
+    participantPaymentMethod: {
+      type: DataTypes.ENUM({
+        values: ['ob', 'ch', 'bt']
+      }),
+      defaultValue: 'ob',
+      allowNull: false
     }
   }, {
     sequelize,
